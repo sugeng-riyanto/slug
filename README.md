@@ -1,12 +1,12 @@
 # slug
-from flask import Flask, render_template, request, redirect, url_for
-import sqlite3
+    from flask import Flask, render_template, request, redirect, url_for
+    import sqlite3
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'your_secret_key'
 
 # Database initialization
-def init_db():
+    def init_db():
     # Connect to the database
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
@@ -23,16 +23,16 @@ def init_db():
     conn.commit()
     conn.close()
 
-init_db()  # Initialize the database when the app starts
+    init_db()  # Initialize the database when the app starts
 
 # Helper function to generate a slug
-def generate_slug(author):
-    return author.lower().replace(' ', '-')  # Converts author name to a URL-friendly slug
+    def generate_slug(author):
+       return author.lower().replace(' ', '-')  # Converts author name to a URL-friendly slug
 
 # Create a new book
-@app.route('/add', methods=['POST', 'GET'])
-def add_book():
-    if request.method == 'POST':
+     @app.route('/add', methods=['POST', 'GET'])
+     def add_book():
+     if request.method == 'POST':
         title = request.form['title']
         author = request.form['author']
         slug = generate_slug(author)  # Generate slug from author's name
@@ -50,10 +50,10 @@ def add_book():
     return render_template('add.html')  # Render the add book form
 
 # Read (list) books
-@app.route('/')
-def index():
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
+    @app.route('/')
+    def index():
+     conn = sqlite3.connect('database.db')
+     cursor = conn.cursor()
 
     # Fetch all books from the database
     cursor.execute('SELECT * FROM books')
@@ -63,8 +63,8 @@ def index():
     return render_template('index.html', books=books)  # Render the book list page with fetched books
 
 # Update a book
-@app.route('/edit/<string:slug>', methods=['POST', 'GET'])
-def edit_book(slug):
+    @app.route('/edit/<string:slug>', methods=['POST', 'GET'])
+    def edit_book(slug):
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
@@ -87,10 +87,10 @@ def edit_book(slug):
     return render_template('edit.html', book=book)  # Render the edit book form with book details
 
 # Delete a book
-@app.route('/delete/<string:slug>')
-def delete_book(slug):
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
+    @app.route('/delete/<string:slug>')
+    def delete_book(slug):
+     conn = sqlite3.connect('database.db')
+     cursor = conn.cursor()
 
     # Delete a book from the database based on slug
     cursor.execute('DELETE FROM books WHERE slug=?', (slug,))
@@ -99,5 +99,5 @@ def delete_book(slug):
 
     return redirect(url_for('index'))  # Redirect to the book list page after deletion
 
-if __name__ == '__main__':
-    app.run(debug=True)  # Run the Flask app in debug mode
+    if __name__ == '__main__':
+        app.run(debug=True)  # Run the Flask app in debug mode
